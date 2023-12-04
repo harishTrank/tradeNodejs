@@ -2,6 +2,7 @@ const { tradeApiKey, webSocketURL } = require("../config/keys");
 const tradeCoinModal = require("../models/tradeCoin.model");
 const pendingOrderManager = require("../Services/pendingOrderManager");
 const WebSocket = require("ws");
+const nseList = require("../Extra/NSEList");
 
 const staticCoins = {
   mcx: [
@@ -26,7 +27,6 @@ const staticCoins = {
 };
 const tradeSocketManager = () => {
   const ws = new WebSocket(webSocketURL);
-  let Identifiers = [];
   const authorization = {
     MessageType: "Authenticate",
     Password: tradeApiKey,
@@ -51,26 +51,31 @@ const tradeSocketManager = () => {
             })
           );
         });
-      }
-      if (receivedData?.Result && receivedData?.Result.length > 0) {
-        receivedData?.Result?.[0]?.Identifier &&
-          Identifiers.push(receivedData?.Result?.[0]?.Identifier);
-        receivedData?.Result?.[1]?.Identifier &&
-          Identifiers.push(receivedData?.Result?.[1]?.Identifier);
-      }
 
-      if (receivedData?.Request?.Product === "ZINCMINI") {
-        Identifiers.map((itemObj) =>
+        nseList.map((objIdentifier) => {
           ws.send(
             JSON.stringify({
               MessageType: "SubscribeRealtime",
-              Exchange: "MCX",
-              InstrumentIdentifier: itemObj,
+              Exchange: "NSE",
+              InstrumentIdentifier: objIdentifier,
             })
-          )
-        );
+          );
+        });
       }
 
+      if (receivedData?.Result && receivedData?.Result.length > 0) {
+        receivedData?.Result?.slice(0, 2)?.map(
+          (itemObj) =>
+            itemObj &&
+            ws.send(
+              JSON.stringify({
+                MessageType: "SubscribeRealtime",
+                Exchange: "MCX",
+                InstrumentIdentifier: itemObj,
+              })
+            )
+        );
+      }
       if (receivedData?.MessageType === "RealtimeResult") {
         const currentObject = await tradeCoinModal.findOne({
           InstrumentIdentifier: receivedData?.InstrumentIdentifier,
@@ -99,6 +104,7 @@ const tradeSocketManager = () => {
             upsert: true,
           }
         );
+        pendingOrderManager(receivedData);
       }
     });
   } catch (error) {

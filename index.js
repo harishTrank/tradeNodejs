@@ -8,6 +8,7 @@ const tradeCoinSocket = require("./customSocketio/tradeCoinSocket");
 const mongoose = require("mongoose");
 const { database } = require("./config/keys");
 const cors = require("cors");
+const path = require("path");
 
 // Enable CORS for all routes
 app.use(cors());

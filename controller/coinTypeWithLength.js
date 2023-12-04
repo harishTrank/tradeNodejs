@@ -1,35 +1,32 @@
 const tradeCoinModal = require("../models/tradeCoin.model");
+const { miniList } = require("../Extra/MiniList");
 
 const coinTypeWithLength = async (req, res) => {
   try {
-    const listFixed = [
-      /ZINCMINI/,
-      /SILVERM/,
-      /NATGASMINI/,
-      /LEADMINI/,
-      /GOLDM/,
-      /COPPERM/,
-      /ALUMINIUM/,
-      /CRUDEOILM/,
-    ];
     const miniCount = await tradeCoinModal
       .find({
-        InstrumentIdentifier: { $in: listFixed },
+        InstrumentIdentifier: { $in: miniList },
+        Exchange: "MCX",
       })
       .count();
 
     const ecxCount = await tradeCoinModal
       .find({
-        InstrumentIdentifier: { $nin: listFixed },
+        InstrumentIdentifier: { $nin: miniList },
         Exchange: "MCX",
       })
       .count();
 
+    const allCount = await tradeCoinModal.find().count();
+
     return res.status(200).json({
       success: true,
       message: "Data found successfully.",
-      miniCount,
-      ecxCount,
+      allCount,
+      coins: [
+        { name: "MCX", coinCount: ecxCount },
+        { name: "MINI", coinCount: miniCount },
+      ],
     });
   } catch (error) {
     console.log(error);

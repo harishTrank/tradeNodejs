@@ -1,9 +1,23 @@
 const tradeCoinModal = require("../models/tradeCoin.model");
+const { miniList } = require("../Extra/MiniList");
 
 const allCoinIdentifier = async (req, res) => {
   try {
-    const response = await tradeCoinModal.find({});
-    // .select("InstrumentIdentifier Exchange");
+    const { coinType } = req.query;
+    let response;
+    if (coinType === "MINI") {
+      response = await tradeCoinModal.find({
+        InstrumentIdentifier: { $in: miniList },
+        Exchange: "MCX",
+      });
+    } else if (coinType === "MCX") {
+      response = await tradeCoinModal.find({
+        InstrumentIdentifier: { $nin: miniList },
+        Exchange: "MCX",
+      });
+    } else {
+      response = await tradeCoinModal.find({});
+    }
 
     return res.status(200).json({
       success: true,
