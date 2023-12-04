@@ -3,21 +3,21 @@ const { miniList } = require("../Extra/MiniList");
 
 const coinTypeWithLength = async (req, res) => {
   try {
-    const miniCount = await tradeCoinModal
-      .find({
-        InstrumentIdentifier: { $in: miniList },
-        Exchange: "MCX",
-      })
-      .count();
+    const miniCount = await tradeCoinModal.countDocuments({
+      InstrumentIdentifier: { $in: miniList },
+      Exchange: "MCX",
+    });
 
-    const ecxCount = await tradeCoinModal
-      .find({
-        InstrumentIdentifier: { $nin: miniList },
-        Exchange: "MCX",
-      })
-      .count();
+    const ecxCount = await tradeCoinModal.countDocuments({
+      InstrumentIdentifier: { $nin: miniList },
+      Exchange: "MCX",
+    });
 
-    const allCount = await tradeCoinModal.find().count();
+    const nseCound = await tradeCoinModal.countDocuments({
+      Exchange: "NSE",
+    });
+
+    const allCount = await tradeCoinModal.countDocuments();
 
     return res.status(200).json({
       success: true,
@@ -25,6 +25,7 @@ const coinTypeWithLength = async (req, res) => {
       allCount,
       coins: [
         { name: "MCX", coinCount: ecxCount },
+        { name: "NSE", coinCount: nseCound },
         { name: "MINI", coinCount: miniCount },
       ],
     });

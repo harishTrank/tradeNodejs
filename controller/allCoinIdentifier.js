@@ -15,6 +15,10 @@ const allCoinIdentifier = async (req, res) => {
         InstrumentIdentifier: { $nin: miniList },
         Exchange: "MCX",
       });
+    } else if (coinType === "NSE") {
+      response = await tradeCoinModal.find({
+        Exchange: "NSE",
+      });
     } else {
       response = await tradeCoinModal.find({});
     }
