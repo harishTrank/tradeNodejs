@@ -24,7 +24,6 @@ const staticCoins = {
     "ZINCMINI",
   ],
 };
-
 const tradeSocketManager = () => {
   const ws = new WebSocket(webSocketURL);
   let Identifiers = [];

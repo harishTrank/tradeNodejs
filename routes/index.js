@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const createError = require("http-errors");
-const allCoinIdentifier = require("../controller/allCoinIdentifier");
+const tradeRouter = require("./tradeRoutes");
 
 router.get("/test", (req, res) => {
   res.status(200).json({
@@ -8,7 +8,7 @@ router.get("/test", (req, res) => {
   });
 });
 
-router.get("/api/tradeCoin", allCoinIdentifier);
+router.use("/api/tradeCoin", tradeRouter);
 
 router.use("/api", (req, res, next) => {
   next(
