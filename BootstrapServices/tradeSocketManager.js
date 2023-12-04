@@ -1,0 +1,121 @@
+const { tradeApiKey, webSocketURL } = require("../config/keys");
+const tradeCoinModal = require("../models/tradeCoin.model");
+const pendingOrderManager = require("../Services/pendingOrderManager");
+const WebSocket = require("ws");
+
+const staticCoins = {
+  mcx: [
+    "CRUDEOIL",
+    "CRUDEOILM",
+    "ALUMINI",
+    "ALUMINIUM",
+    "COPPER",
+    "COPPERM",
+    "GOLD",
+    "GOLDM",
+    "LEAD",
+    "LEADMINI",
+    "NATURALGAS",
+    "NATGASMINI",
+    "SILVER",
+    "SILVERM",
+    "SILVERMIC",
+    "ZINC",
+    "ZINCMINI",
+  ],
+};
+
+const tradeSocketManager = () => {
+  const ws = new WebSocket(webSocketURL);
+  let Identifiers = [];
+  const authorization = {
+    MessageType: "Authenticate",
+    Password: tradeApiKey,
+  };
+
+  ws.on("open", () => {
+    console.log("Connected to the WebSocket server");
+    ws.send(JSON.stringify(authorization));
+  });
+
+  try {
+    ws.on("message", async (data) => {
+      const receivedData = JSON.parse(data);
+      if (receivedData?.Complete) {
+        staticCoins.mcx.map((item) => {
+          ws.send(
+            JSON.stringify({
+              MessageType: "GetInstruments",
+              Exchange: "MCX",
+              InstrumentType: "FUTCOM",
+              Product: item,
+            })
+          );
+        });
+      }
+      if (receivedData?.Result && receivedData?.Result.length > 0) {
+        receivedData?.Result?.[0]?.Identifier &&
+          Identifiers.push(receivedData?.Result?.[0]?.Identifier);
+        receivedData?.Result?.[1]?.Identifier &&
+          Identifiers.push(receivedData?.Result?.[1]?.Identifier);
+      }
+
+      if (receivedData?.Request?.Product === "ZINCMINI") {
+        Identifiers.map((itemObj) =>
+          ws.send(
+            JSON.stringify({
+              MessageType: "SubscribeRealtime",
+              Exchange: "MCX",
+              InstrumentIdentifier: itemObj,
+            })
+          )
+        );
+      }
+
+      if (receivedData?.MessageType === "RealtimeResult") {
+        const currentObject = await tradeCoinModal.findOne({
+          InstrumentIdentifier: receivedData?.InstrumentIdentifier,
+        });
+        await tradeCoinModal.findOneAndUpdate(
+          {
+            InstrumentIdentifier: receivedData?.InstrumentIdentifier,
+          },
+          {
+            ...receivedData,
+            ...{
+              buyColor:
+                currentObject?.BuyPrice > receivedData?.BuyPrice
+                  ? "rgba(0, 255, 0, 0.4)"
+                  : "rgba(256, 0,0, 0.4)",
+            },
+            ...{
+              sellColor:
+                currentObject?.SellPrice > receivedData?.SellPrice
+                  ? "rgba(0, 255, 0, 0.4)"
+                  : "rgba(256, 0,0, 0.4)",
+            },
+          },
+          {
+            new: true,
+            upsert: true,
+          }
+        );
+      }
+    });
+  } catch (error) {
+    console.log("error In Socket case", error);
+    setTimeout(() => tradeSocketManager(), 1000);
+  }
+
+  ws.on("close", () => {
+    console.log("Connection closed");
+    setTimeout(() => tradeSocketManager(), 1000);
+  });
+
+  ws.on("error", (error) => {
+    console.error(`WebSocket error: ${error.message}`);
+    setTimeout(() => tradeSocketManager(), 1000);
+  });
+};
+
+module.exports = tradeSocketManager;
