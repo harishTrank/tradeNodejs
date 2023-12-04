@@ -84,13 +84,13 @@ const tradeSocketManager = () => {
             ...receivedData,
             ...{
               buyColor:
-                currentObject?.BuyPrice > receivedData?.BuyPrice
+                currentObject?.BuyPrice < receivedData?.BuyPrice
                   ? "rgba(0, 255, 0, 0.4)"
                   : "rgba(256, 0,0, 0.4)",
             },
             ...{
               sellColor:
-                currentObject?.SellPrice > receivedData?.SellPrice
+                currentObject?.SellPrice < receivedData?.SellPrice
                   ? "rgba(0, 255, 0, 0.4)"
                   : "rgba(256, 0,0, 0.4)",
             },
