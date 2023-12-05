@@ -64,17 +64,16 @@ const tradeSocketManager = () => {
       }
 
       if (receivedData?.Result && receivedData?.Result.length > 0) {
-        receivedData?.Result?.slice(0, 2)?.map(
-          (itemObj) =>
-            itemObj &&
+        receivedData?.Result?.slice(0, 2)?.map((itemObj) => {
+          itemObj &&
             ws.send(
               JSON.stringify({
                 MessageType: "SubscribeRealtime",
                 Exchange: "MCX",
-                InstrumentIdentifier: itemObj,
+                InstrumentIdentifier: itemObj?.Identifier,
               })
-            )
-        );
+            );
+        });
       }
       if (receivedData?.MessageType === "RealtimeResult") {
         const currentObject = await tradeCoinModal.findOne({

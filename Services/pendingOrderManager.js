@@ -14,25 +14,18 @@ const pendingOrderManager = async (currentData) => {
   try {
     const sqlQuery = `SELECT * FROM "App_buyandsellmodel" where is_pending=true`;
     const result = await client.query(sqlQuery);
-
     const successIds = result.rows
       .map((row) => {
-        const currentLiveData = currentData.find(
-          (findItem) => findItem.InstrumentIdentifier === row.identifer
-        );
-        if (currentLiveData) {
+        if (currentData) {
           if (
-            (row.action === "BUY" &&
-              currentLiveData.BuyPrice >= row.buy_price) ||
-            (row.action === "SELL" &&
-              currentLiveData.SellPrice <= row.sell_price)
+            (row.action === "BUY" && currentData.BuyPrice >= row.buy_price) ||
+            (row.action === "SELL" && currentData.SellPrice <= row.sell_price)
           ) {
             return Number(row.id);
           }
         }
       })
       .filter((removeUndefined) => removeUndefined !== undefined);
-
     if (successIds && successIds.length > 0) {
       const updateQuery = `UPDATE "App_buyandsellmodel" SET is_pending = false WHERE id in (${successIds})`;
       await client.query(updateQuery);
