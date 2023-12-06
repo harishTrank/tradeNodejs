@@ -6,19 +6,25 @@ const allCoinIdentifier = async (req, res) => {
     const { coinType } = req.query;
     let response;
     if (coinType === "MINI") {
-      response = await tradeCoinModal.find({
-        InstrumentIdentifier: { $in: miniList },
-        Exchange: "MCX",
-      });
+      response = await tradeCoinModal
+        .find({
+          InstrumentIdentifier: { $in: miniList },
+          Exchange: "MCX",
+        })
+        .sort({ InstrumentIdentifier: 1 });
     } else if (coinType === "MCX") {
-      response = await tradeCoinModal.find({
-        InstrumentIdentifier: { $nin: miniList },
-        Exchange: "MCX",
-      });
+      response = await tradeCoinModal
+        .find({
+          InstrumentIdentifier: { $nin: miniList },
+          Exchange: "MCX",
+        })
+        .sort({ InstrumentIdentifier: 1 });
     } else if (coinType === "NSE") {
-      response = await tradeCoinModal.find({
-        Exchange: "NSE",
-      });
+      response = await tradeCoinModal
+        .find({
+          Exchange: "NSE",
+        })
+        .sort({ InstrumentIdentifier: 1 });
     } else {
       response = await tradeCoinModal.find({});
     }
