@@ -70,7 +70,7 @@ const tradeSocketManager = () => {
               JSON.stringify({
                 MessageType: "SubscribeRealtime",
                 Exchange: "MCX",
-                InstrumentIdentifier: itemObj?.Identifier,
+                InstrumentIdentifier: itemObj.Identifier,
               })
             );
         });
@@ -103,7 +103,7 @@ const tradeSocketManager = () => {
             upsert: true,
           }
         );
-        pendingOrderManager(receivedData);
+        // pendingOrderManager(receivedData);
       }
     });
   } catch (error) {
