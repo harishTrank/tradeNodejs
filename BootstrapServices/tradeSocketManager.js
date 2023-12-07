@@ -77,8 +77,8 @@ const tradeSocketManager = () => {
         });
       }
       if (receivedData?.MessageType === "RealtimeResult") {
-        const tradeCoinList = JSON.parse(await client.get("tradeCoinList"));
-        console.log("tradeCoinList.length", tradeCoinList.length);
+        const tradeCoinList = JSON.parse(await client?.get("tradeCoinList"));
+        console.log("tradeCoinList.length", tradeCoinList?.length);
         await client.set(
           "tradeCoinList",
           JSON.stringify([

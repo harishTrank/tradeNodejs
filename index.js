@@ -52,7 +52,7 @@ tradeCoinSocket(io);
 // ------------------------------------------------------
 
 // Start the Socket.IO server and other services
-await client.set("tradeCoinList", JSON.stringify([]));
+// await client.set("tradeCoinList", JSON.stringify([]));
 tradeSocketManager();
 
 // Set up the server to listen on the specified port
