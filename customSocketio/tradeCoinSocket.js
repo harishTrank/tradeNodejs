@@ -26,7 +26,7 @@ const socketTestCase = (io) => {
         io.to(socket.id).emit(
           "filterDataSend",
           JSON.parse(await client.get("tradeCoinList"))
-            .filter((item) =>
+            ?.filter((item) =>
               data.identifier.includes(item.InstrumentIdentifier)
             )
             ?.sort((a, b) =>
