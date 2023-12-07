@@ -1,4 +1,4 @@
-const { tradeApiKey, webSocketURL } = require("../config/keys");
+// const { tradeApiKey, webSocketURL } = require("../config/keys");
 const tradeCoinModal = require("../models/tradeCoin.model");
 const pendingOrderManager = require("../Services/pendingOrderManager");
 const WebSocket = require("ws");
@@ -27,10 +27,10 @@ const staticCoins = {
   ],
 };
 const tradeSocketManager = () => {
-  const ws = new WebSocket(webSocketURL);
+  const ws = new WebSocket("ws://nimblewebstream.lisuns.com:4575/");
   const authorization = {
     MessageType: "Authenticate",
-    Password: tradeApiKey,
+    Password: "3df99b22-c498-4aec-b661-21d935b1a07c",
   };
 
   ws.on("open", () => {

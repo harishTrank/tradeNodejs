@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-module.exports = {
+const configVal = {
   database: process.env.DB_CONNECT,
   tradeApiKey: process.env.TRADE_API_KEY,
   webSocketURL: process.env.WEBSOCKET_URL,
@@ -11,3 +11,5 @@ module.exports = {
     refreshTokenLife: process.env.REFRESH_TOKEN_LIFE,
   },
 };
+
+module.exports = configVal;
