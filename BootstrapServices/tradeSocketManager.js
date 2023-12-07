@@ -1,4 +1,4 @@
-const { tradeApiKey, webSocketURL } = require("../Config/keys");
+const { tradeApiKey, webSocketURL } = require("../config/keys");
 const tradeCoinModal = require("../models/tradeCoin.model");
 const pendingOrderManager = require("../Services/pendingOrderManager");
 const WebSocket = require("ws");
