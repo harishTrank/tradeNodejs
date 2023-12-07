@@ -5,11 +5,7 @@ const routes = require("./routes");
 const tradeSocketManager = require("./BootstrapServices/tradeSocketManager");
 const http = require("http"); // Import the http module
 const tradeCoinSocket = require("./customSocketio/tradeCoinSocket");
-// const mongoose = require("mongoose");
-// const { database } = require("./config/keys");
 const cors = require("cors");
-// const path = require("path");
-// const client = require("./Services/redisClient");
 require("./Services/redisClient");
 
 // Enable CORS for all routes
@@ -37,28 +33,9 @@ const io = require("socket.io")(server, {
 // Set up a connection event custom socket
 tradeCoinSocket(io);
 
-// Configure MongoDB
-// mongoose.set("useCreateIndex", true);
-// mongoose
-//   .connect(database, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//     useFindAndModify: false,
-//   })
-//   .then(() => console.log(`${"✓"} ${"MongoDB Connected!"}`))
-//   .then(async () => {
-// third part data --------------------------------------
-
-// ------------------------------------------------------
-
-// Start the Socket.IO server and other services
-// await client.set("tradeCoinList", JSON.stringify([]));
 tradeSocketManager();
 
-// Set up the server to listen on the specified port
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, "0.0.0.0", () =>
   console.log(`Server Started on port ${PORT}`)
 );
-// })
-// .catch((err) => console.log(err));
