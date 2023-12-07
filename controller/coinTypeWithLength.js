@@ -1,23 +1,24 @@
-const tradeCoinModal = require("../models/tradeCoin.model");
 const { miniList } = require("../Extra/MiniList");
+const client = require("../Services/redisClient");
 
 const coinTypeWithLength = async (req, res) => {
   try {
-    const miniCount = await tradeCoinModal.countDocuments({
-      InstrumentIdentifier: { $in: miniList },
-      Exchange: "MCX",
-    });
+    const allTradeCoin = JSON.parse(await client.get("tradeCoinList"));
+    const miniCount = allTradeCoin.filter(
+      (item) =>
+        miniList.includes(item.InstrumentIdentifier) && item.Exchange === "MCX"
+    ).length;
 
-    const ecxCount = await tradeCoinModal.countDocuments({
-      InstrumentIdentifier: { $nin: miniList },
-      Exchange: "MCX",
-    });
+    const ecxCount = allTradeCoin.filter(
+      (item) =>
+        !miniList.includes(item.InstrumentIdentifier) && item.Exchange === "MCX"
+    ).length;
 
-    const nseCound = await tradeCoinModal.countDocuments({
-      Exchange: "NSE",
-    });
+    const nseCound = allTradeCoin.filter(
+      (item) => item.Exchange === "NSE"
+    ).length;
 
-    const allCount = await tradeCoinModal.countDocuments();
+    const allCount = allTradeCoin.length;
 
     return res.status(200).json({
       success: true,

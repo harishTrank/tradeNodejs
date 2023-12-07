@@ -3,6 +3,7 @@ const tradeCoinModal = require("../models/tradeCoin.model");
 const pendingOrderManager = require("../Services/pendingOrderManager");
 const WebSocket = require("ws");
 const nseList = require("../Extra/NSEList");
+const client = require("../Services/redisClient");
 
 const staticCoins = {
   mcx: [
@@ -76,34 +77,39 @@ const tradeSocketManager = () => {
         });
       }
       if (receivedData?.MessageType === "RealtimeResult") {
-        const currentObject = await tradeCoinModal.findOne({
-          InstrumentIdentifier: receivedData?.InstrumentIdentifier,
-        });
-        await tradeCoinModal.findOneAndUpdate(
-          {
-            InstrumentIdentifier: receivedData?.InstrumentIdentifier,
-          },
+        const tradeCoinList = JSON.parse(await client.get("tradeCoinList"));
+        const result = [
+          ...tradeCoinList?.filter(
+            (filterItem) =>
+              filterItem?.InstrumentIdentifier !==
+              receivedData?.InstrumentIdentifier
+          ),
           {
             ...receivedData,
             ...{
               buyColor:
-                currentObject?.BuyPrice < receivedData?.BuyPrice
+                tradeCoinList?.find(
+                  (findItem) =>
+                    findItem?.InstrumentIdentifier ===
+                    receivedData?.InstrumentIdentifier
+                )?.BuyPrice < receivedData?.BuyPrice
                   ? "rgba(0, 255, 0, 0.4)"
                   : "rgba(256, 0,0, 0.4)",
             },
             ...{
               sellColor:
-                currentObject?.SellPrice < receivedData?.SellPrice
+                tradeCoinList?.find(
+                  (findItem) =>
+                    findItem?.InstrumentIdentifier ===
+                    receivedData?.InstrumentIdentifier
+                )?.SellPrice < receivedData?.SellPrice
                   ? "rgba(0, 255, 0, 0.4)"
                   : "rgba(256, 0,0, 0.4)",
             },
           },
-          {
-            new: true,
-            upsert: true,
-          }
-        );
-        // pendingOrderManager(receivedData);
+        ];
+        console.log("result", result.length);
+        await client.set("tradeCoinList", JSON.stringify(result));
       }
     });
   } catch (error) {

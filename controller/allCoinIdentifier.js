@@ -1,32 +1,28 @@
-const tradeCoinModal = require("../models/tradeCoin.model");
 const { miniList } = require("../Extra/MiniList");
+const client = require("../Services/redisClient");
 
 const allCoinIdentifier = async (req, res) => {
   try {
     const { coinType } = req.query;
     let response;
+    const allTradeCoin = JSON.parse(await client.get("tradeCoinList"));
+
     if (coinType === "MINI") {
-      response = await tradeCoinModal
-        .find({
-          InstrumentIdentifier: { $in: miniList },
-          Exchange: "MCX",
-        })
-        .sort({ InstrumentIdentifier: 1 });
+      response = allTradeCoin.filter(
+        (item) =>
+          miniList.includes(item.InstrumentIdentifier) &&
+          item.Exchange === "MCX"
+      );
     } else if (coinType === "MCX") {
-      response = await tradeCoinModal
-        .find({
-          InstrumentIdentifier: { $nin: miniList },
-          Exchange: "MCX",
-        })
-        .sort({ InstrumentIdentifier: 1 });
+      response = allTradeCoin.filter(
+        (item) =>
+          !miniList.includes(item.InstrumentIdentifier) &&
+          item.Exchange === "MCX"
+      );
     } else if (coinType === "NSE") {
-      response = await tradeCoinModal
-        .find({
-          Exchange: "NSE",
-        })
-        .sort({ InstrumentIdentifier: 1 });
+      response = allTradeCoin.filter((item) => item.Exchange === "NSE");
     } else {
-      response = await tradeCoinModal.find({});
+      response = allTradeCoin;
     }
 
     return res.status(200).json({

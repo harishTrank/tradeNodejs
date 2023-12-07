@@ -9,6 +9,8 @@ const mongoose = require("mongoose");
 const { database } = require("./config/keys");
 const cors = require("cors");
 const path = require("path");
+const client = require("./Services/redisClient");
+require("./Services/redisClient");
 
 // Enable CORS for all routes
 app.use(cors());
@@ -44,12 +46,13 @@ mongoose
     useFindAndModify: false,
   })
   .then(() => console.log(`${"✓"} ${"MongoDB Connected!"}`))
-  .then(() => {
+  .then(async () => {
     // third part data --------------------------------------
 
     // ------------------------------------------------------
 
     // Start the Socket.IO server and other services
+    await client.set("tradeCoinList", JSON.stringify([]));
     tradeSocketManager();
 
     // Set up the server to listen on the specified port
