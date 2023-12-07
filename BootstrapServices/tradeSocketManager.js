@@ -78,38 +78,39 @@ const tradeSocketManager = () => {
       }
       if (receivedData?.MessageType === "RealtimeResult") {
         const tradeCoinList = JSON.parse(await client.get("tradeCoinList"));
-        const result = [
-          ...tradeCoinList?.filter(
-            (filterItem) =>
-              filterItem?.InstrumentIdentifier !==
-              receivedData?.InstrumentIdentifier
-          ),
-          {
-            ...receivedData,
-            ...{
-              buyColor:
-                tradeCoinList?.find(
-                  (findItem) =>
-                    findItem?.InstrumentIdentifier ===
-                    receivedData?.InstrumentIdentifier
-                )?.BuyPrice < receivedData?.BuyPrice
-                  ? "rgba(0, 255, 0, 0.4)"
-                  : "rgba(256, 0,0, 0.4)",
+        await client.set(
+          "tradeCoinList",
+          JSON.stringify([
+            ...tradeCoinList?.filter(
+              (filterItem) =>
+                filterItem?.InstrumentIdentifier !==
+                receivedData?.InstrumentIdentifier
+            ),
+            {
+              ...receivedData,
+              ...{
+                buyColor:
+                  tradeCoinList?.find(
+                    (findItem) =>
+                      findItem?.InstrumentIdentifier ===
+                      receivedData?.InstrumentIdentifier
+                  )?.BuyPrice < receivedData?.BuyPrice
+                    ? "rgba(0, 255, 0, 0.4)"
+                    : "rgba(256, 0,0, 0.4)",
+              },
+              ...{
+                sellColor:
+                  tradeCoinList?.find(
+                    (findItem) =>
+                      findItem?.InstrumentIdentifier ===
+                      receivedData?.InstrumentIdentifier
+                  )?.SellPrice < receivedData?.SellPrice
+                    ? "rgba(0, 255, 0, 0.4)"
+                    : "rgba(256, 0,0, 0.4)",
+              },
             },
-            ...{
-              sellColor:
-                tradeCoinList?.find(
-                  (findItem) =>
-                    findItem?.InstrumentIdentifier ===
-                    receivedData?.InstrumentIdentifier
-                )?.SellPrice < receivedData?.SellPrice
-                  ? "rgba(0, 255, 0, 0.4)"
-                  : "rgba(256, 0,0, 0.4)",
-            },
-          },
-        ];
-        console.log("result", result.length);
-        await client.set("tradeCoinList", JSON.stringify(result));
+          ])
+        );
       }
     });
   } catch (error) {
