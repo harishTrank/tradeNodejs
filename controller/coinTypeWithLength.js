@@ -6,12 +6,14 @@ const coinTypeWithLength = async (req, res) => {
     const allTradeCoin = JSON.parse(await client.get("tradeCoinList"));
     const miniCount = allTradeCoin.filter(
       (item) =>
-        miniList.includes(item.InstrumentIdentifier) && item.Exchange === "MCX"
+        miniList.some((pattern) => pattern.test(item.InstrumentIdentifier)) &&
+        item.Exchange === "MCX"
     ).length;
 
     const ecxCount = allTradeCoin.filter(
       (item) =>
-        !miniList.includes(item.InstrumentIdentifier) && item.Exchange === "MCX"
+        !miniList.some((pattern) => pattern.test(item.InstrumentIdentifier)) &&
+        item.Exchange === "MCX"
     ).length;
 
     const nseCound = allTradeCoin.filter(

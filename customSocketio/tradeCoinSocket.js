@@ -13,7 +13,9 @@ const socketTestCase = (io) => {
       const allDataInterval = setInterval(async () => {
         io.to(socket.id).emit(
           "tradeCoin data",
-          JSON.parse(await client.get("tradeCoinList"))
+          JSON.parse(await client.get("tradeCoinList"))?.sort((a, b) =>
+            a?.InstrumentIdentifier?.localeCompare(b?.InstrumentIdentifier)
+          )
         );
       }, 1000);
       userIntervals.allData[socket.id] = allDataInterval;
@@ -23,9 +25,13 @@ const socketTestCase = (io) => {
       const filterDataInterval = setInterval(async () => {
         io.to(socket.id).emit(
           "filterDataSend",
-          JSON.parse(await client.get("tradeCoinList")).filter((item) =>
-            data.identifier.includes(item.InstrumentIdentifier)
-          )
+          JSON.parse(await client.get("tradeCoinList"))
+            .filter((item) =>
+              data.identifier.includes(item.InstrumentIdentifier)
+            )
+            ?.sort((a, b) =>
+              a?.InstrumentIdentifier?.localeCompare(b?.InstrumentIdentifier)
+            )
         );
         lengthCase = data.length;
       }, 1000);
