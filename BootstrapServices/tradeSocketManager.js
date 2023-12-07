@@ -1,4 +1,4 @@
-const { tradeApiKey, webSocketURL } = require("../config/keys");
+const { tradeApiKey, webSocketURL } = require("../Config/keys");
 const tradeCoinModal = require("../models/tradeCoin.model");
 const pendingOrderManager = require("../Services/pendingOrderManager");
 const WebSocket = require("ws");
@@ -78,6 +78,7 @@ const tradeSocketManager = () => {
       }
       if (receivedData?.MessageType === "RealtimeResult") {
         const tradeCoinList = JSON.parse(await client.get("tradeCoinList"));
+        console.log("tradeCoinList.length", tradeCoinList.length);
         await client.set(
           "tradeCoinList",
           JSON.stringify([
