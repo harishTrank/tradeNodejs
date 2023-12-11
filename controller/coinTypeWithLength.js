@@ -26,10 +26,13 @@ const coinTypeWithLength = async (req, res) => {
       { name: "NSE", coinCount: nseCound },
       { name: "MINI", coinCount: miniCount },
     ];
-    if (coinList) {
+    if (coinList && coinList != "[]") {
       coins = coins.filter((item) => JSON.parse(coinList)?.includes(item.name));
       allCount = 0;
       allCount = coins.map((item) => item.coinCount).reduce((a, b) => a + b);
+    } else if (coinList && coinList == "[]") {
+      allCount = 0;
+      coins = [];
     }
 
     return res.status(200).json({
