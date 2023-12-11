@@ -3,6 +3,8 @@ const { miniList } = require("../Extra/MiniList");
 
 const coinTypeWithLength = async (req, res) => {
   try {
+    const { coinList } = req.query;
+
     const miniCount = await tradeCoinModal.countDocuments({
       InstrumentIdentifier: { $in: miniList },
       Exchange: "MCX",
@@ -17,17 +19,24 @@ const coinTypeWithLength = async (req, res) => {
       Exchange: "NSE",
     });
 
-    const allCount = await tradeCoinModal.countDocuments();
+    let allCount = await tradeCoinModal.countDocuments();
+
+    let coins = [
+      { name: "MCX", coinCount: ecxCount },
+      { name: "NSE", coinCount: nseCound },
+      { name: "MINI", coinCount: miniCount },
+    ];
+    if (coinList) {
+      coins = coins.filter((item) => JSON.parse(coinList)?.includes(item.name));
+      allCount = 0;
+      allCount = coins.map((item) => item.coinCount).reduce((a, b) => a + b);
+    }
 
     return res.status(200).json({
       success: true,
       message: "Data found successfully.",
       allCount,
-      coins: [
-        { name: "MCX", coinCount: ecxCount },
-        { name: "NSE", coinCount: nseCound },
-        { name: "MINI", coinCount: miniCount },
-      ],
+      coins,
     });
   } catch (error) {
     console.log(error);
