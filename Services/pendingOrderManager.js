@@ -1,5 +1,4 @@
 const { Pool } = require("pg");
-const tradeCoinModal = require("../models/tradeCoin.model");
 const axios = require("axios");
 
 const pool = new Pool({
