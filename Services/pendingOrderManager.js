@@ -9,7 +9,7 @@ const pool = new Pool({
   port: 5432,
 });
 
-const url = "http://192.168.0.176:8000/api/buy-sell-sl/";
+const url = "http://13.232.101.55:8000/api/buy-sell-sl/";
 const dateManager = (val) => {
   return `${val?.split("_")?.[2]?.slice(0, 2)} ${val
     ?.split("_")?.[2]
