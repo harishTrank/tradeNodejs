@@ -50,9 +50,9 @@ const pendingOrderManager = async (currentData) => {
       resultSL.rows.map(async (mapItem) => {
         if (
           (mapItem.action.toUpperCase() === "BUY" &&
-            mapItem.price >= currentData.BuyPrice) ||
+            mapItem.stop_loss >= currentData.BuyPrice) ||
           (mapItem.action.toUpperCase() === "SELL" &&
-            mapItem.price <= currentData.SellPrice)
+            mapItem.stop_loss <= currentData.SellPrice)
         ) {
           await axios.post(url, {
             id: mapItem.buy_sell_user_id,
@@ -74,6 +74,7 @@ const pendingOrderManager = async (currentData) => {
             is_pending: false,
             lot_size: currentData.QuotationLot,
             sl_flag: true,
+            stop_loss: 0,
           });
           await client.query(
             `UPDATE "App_buyandsellmodel" SET sl_flag = true WHERE id in (${mapItem.id})`
