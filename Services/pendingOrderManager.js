@@ -58,13 +58,8 @@ const pendingOrderManager = async (currentData) => {
             id: mapItem.buy_sell_user_id,
             identifer: currentData?.InstrumentIdentifier,
             trade_type: "SL",
-            coin_name:
-              currentData?.Exchange === "NSE"
-                ? `NSE ${currentData?.InstrumentIdentifier}`
-                : `${currentData?.Exchange || ""} ${
-                    currentData?.InstrumentIdentifier?.split("_")?.[1]
-                  }, ${dateManager(currentData?.InstrumentIdentifier) || ""}`,
-            ex_change: currentData.Exchange,
+            coin_name: mapItem.coin_name,
+            ex_change: mapItem.ex_change,
             action: mapItem.action.toUpperCase() === "SELL" ? "BUY" : "SELL",
             quantity: -mapItem.quantity,
             price:
