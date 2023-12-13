@@ -61,7 +61,7 @@ const pendingOrderManager = async (currentData) => {
             coin_name: mapItem.coin_name,
             ex_change: mapItem.ex_change,
             action: mapItem.action.toUpperCase() === "SELL" ? "BUY" : "SELL",
-            quantity: -mapItem.quantity,
+            quantity: mapItem.quantity,
             price:
               mapItem.action.toUpperCase() === "SELL"
                 ? currentData.BuyPrice
