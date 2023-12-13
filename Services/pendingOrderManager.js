@@ -44,7 +44,7 @@ const pendingOrderManager = async (currentData) => {
     //  ----------------- ----------------- -----------------
 
     // SL CASE  ----------------- ----------------- ---------
-    const selectSL = `SELECT * FROM "App_buyandsellmodel" where sl_flag = false AND LOWER(identifer)=LOWER('${currentData.InstrumentIdentifier}') AND LOWER(trade_type) = LOWER('SL')`;
+    const selectSL = `SELECT * FROM "App_buyandsellmodel" where sl_flag = false AND LOWER(identifer)=LOWER('${currentData.InstrumentIdentifier}') AND LOWER(trade_type) = LOWER('SL') AND is_pending = false AND is_cancel = false`;
     const resultSL = await client.query(selectSL);
     if (resultSL.rows && resultSL.rows.length > 0) {
       resultSL.rows.map(async (mapItem) => {
