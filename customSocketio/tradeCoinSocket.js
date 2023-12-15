@@ -4,7 +4,6 @@ const socketTestCase = (io) => {
   const userIntervals = {
     allData: {},
     filterData: {},
-    filterData2: {},
     oneData: {},
   };
 
@@ -34,24 +33,6 @@ const socketTestCase = (io) => {
       });
     });
 
-    socket.on("filterDataGet2", async (data) => {
-      const filterDataInterval = setInterval(async () => {
-        io.to(socket.id).emit(
-          "filterDataSend2",
-          await tradeCoinModal.find({
-            InstrumentIdentifier: { $in: data.identifier },
-          })
-        );
-        lengthCase = data.length;
-      }, 1000);
-      userIntervals.filterData2[socket.id] = filterDataInterval;
-
-      socket.on("filterDataOff2", () => {
-        clearInterval(userIntervals.filterData2[socket.id]);
-        delete userIntervals.filterData2[socket.id];
-      });
-    });
-
     socket.on("getOneData", async (data) => {
       const oneDataInterval = setInterval(async () => {
         io.to(socket.id).emit(
@@ -75,9 +56,6 @@ const socketTestCase = (io) => {
 
       clearInterval(userIntervals.filterData[socket.id]);
       delete userIntervals.filterData[socket.id];
-
-      clearInterval(userIntervals.filterData2[socket.id]);
-      delete userIntervals.filterData2[socket.id];
 
       clearInterval(userIntervals.oneData[socket.id]);
       delete userIntervals.oneData[socket.id];
