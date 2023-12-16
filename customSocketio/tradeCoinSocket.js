@@ -16,6 +16,10 @@ const socketTestCase = (io) => {
     });
 
     socket.on("filterDataGet", async (data) => {
+      if (userIntervals.filterData[socket.id]) {
+        clearInterval(userIntervals.filterData[socket.id]);
+      }
+      
       const filterDataInterval = setInterval(async () => {
         io.to(socket.id).emit(
           "filterDataSend",
