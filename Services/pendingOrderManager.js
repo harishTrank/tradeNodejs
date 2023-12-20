@@ -1,20 +1,16 @@
 const { Pool } = require("pg");
 const axios = require("axios");
 
+const host = "13.232.101.55";
 const pool = new Pool({
-  host: "13.232.101.55",
+  host,
   user: "postgres",
   password: ",sclBQhGIHk3",
   database: "postgres",
   port: 5432,
 });
 
-const url = "http://13.232.101.55:8000/api/buy-sell-sl/";
-const dateManager = (val) => {
-  return `${val?.split("_")?.[2]?.slice(0, 2)} ${val
-    ?.split("_")?.[2]
-    ?.slice(2, 5)} ${val?.split("_")?.[2]?.slice(7)}`;
-};
+const url = `http://${host}:8000/api/buy-sell-sl/`;
 
 const pendingOrderManager = async (currentData) => {
   const client = await pool.connect();
