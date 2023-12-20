@@ -1,7 +1,7 @@
 const { Pool } = require("pg");
 const axios = require("axios");
 
-const host = "13.232.101.55";
+const host = "52.66.205.199";
 const pool = new Pool({
   host,
   user: "postgres",
