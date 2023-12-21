@@ -3,6 +3,7 @@ const tradeCoinModal = require("../models/tradeCoin.model");
 const pendingOrderManager = require("../Services/pendingOrderManager");
 const WebSocket = require("ws");
 const nseList = require("../Extra/NSEList");
+const miniList = require("../Extra/MiniList");
 
 const staticCoins = {
   mcx: [
