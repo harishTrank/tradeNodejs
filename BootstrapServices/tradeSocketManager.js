@@ -89,11 +89,12 @@ const tradeSocketManager = () => {
             ...{
               Exchange:
                 receivedData.Exchange === "MCX" &&
-                miniList.find((itemObj) =>
-                  selectedCoinData?.InstrumentIdentifier.includes(itemObj)
+                Array.isArray(miniList) &&
+                miniList?.find((item) =>
+                  receivedData?.InstrumentIdentifier.match(item)
                 )
                   ? "MINI"
-                  : selectedCoinData.Exchange,
+                  : receivedData?.Exchange.toUpperCase(),
             },
             ...{
               buyColor:
