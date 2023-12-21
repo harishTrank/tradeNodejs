@@ -86,6 +86,15 @@ const tradeSocketManager = () => {
           {
             ...receivedData,
             ...{
+              Exchange:
+                receivedData.Exchange === "MCX" &&
+                miniList.find((itemObj) =>
+                  selectedCoinData?.InstrumentIdentifier.includes(itemObj)
+                )
+                  ? "MINI"
+                  : selectedCoinData.Exchange,
+            },
+            ...{
               buyColor:
                 currentObject?.BuyPrice < receivedData?.BuyPrice
                   ? "rgba(0, 255, 0, 0.4)"
