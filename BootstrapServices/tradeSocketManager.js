@@ -3,7 +3,7 @@ const tradeCoinModal = require("../models/tradeCoin.model");
 const pendingOrderManager = require("../Services/pendingOrderManager");
 const WebSocket = require("ws");
 const nseList = require("../Extra/NSEList");
-const miniList = require("../Extra/MiniList");
+const { miniList } = require("../Extra/MiniList");
 
 const staticCoins = {
   mcx: [
@@ -89,7 +89,6 @@ const tradeSocketManager = () => {
             ...{
               Exchange:
                 receivedData.Exchange === "MCX" &&
-                Array.isArray(miniList) &&
                 miniList?.find((item) =>
                   receivedData?.InstrumentIdentifier.match(item)
                 )

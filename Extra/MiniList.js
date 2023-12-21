@@ -8,5 +8,4 @@ const miniList = [
   /ALUMINIUM/,
   /CRUDEOILM/,
 ];
-console.log();
 module.exports = { miniList };
