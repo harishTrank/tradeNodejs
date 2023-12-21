@@ -1,17 +1,14 @@
 const tradeCoinModal = require("../models/tradeCoin.model");
-const { miniList } = require("../Extra/MiniList");
 
 const coinTypeWithLength = async (req, res) => {
   try {
     const { coinList } = req.query;
 
     const miniCount = await tradeCoinModal.countDocuments({
-      InstrumentIdentifier: { $in: miniList },
-      Exchange: "MCX",
+      Exchange: "MINI",
     });
 
     const ecxCount = await tradeCoinModal.countDocuments({
-      InstrumentIdentifier: { $nin: miniList },
       Exchange: "MCX",
     });
 

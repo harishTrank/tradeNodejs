@@ -1,28 +1,13 @@
 const tradeCoinModal = require("../models/tradeCoin.model");
-const { miniList } = require("../Extra/MiniList");
 
 const allCoinIdentifier = async (req, res) => {
   try {
     const { coinType } = req.query;
     let response;
-    if (coinType === "MINI") {
+    if (coinType && coinType === "") {
       response = await tradeCoinModal
         .find({
-          InstrumentIdentifier: { $in: miniList },
-          Exchange: "MCX",
-        })
-        .sort({ InstrumentIdentifier: 1 });
-    } else if (coinType === "MCX") {
-      response = await tradeCoinModal
-        .find({
-          InstrumentIdentifier: { $nin: miniList },
-          Exchange: "MCX",
-        })
-        .sort({ InstrumentIdentifier: 1 });
-    } else if (coinType === "NSE") {
-      response = await tradeCoinModal
-        .find({
-          Exchange: "NSE",
+          Exchange: coinType,
         })
         .sort({ InstrumentIdentifier: 1 });
     } else {
