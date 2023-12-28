@@ -10,7 +10,7 @@ const pool = new Pool({
   port: 5432,
 });
 
-const url = `http://${host}:8000/api/buy-sell-sl/`;
+const url = `http://${host}:8000/api/buy-sell-coin/`;
 
 const pendingOrderManager = async (currentData) => {
   const client = await pool.connect();
@@ -66,6 +66,8 @@ const pendingOrderManager = async (currentData) => {
             lot_size: currentData.QuotationLot,
             sl_flag: true,
             stop_loss: 0,
+            is_cancel: false,
+            type: "WEB",
           });
           await client.query(
             `UPDATE "App_buyandsellmodel" SET sl_flag = true WHERE id in (${mapItem.id})`
@@ -81,4 +83,4 @@ const pendingOrderManager = async (currentData) => {
   }
 };
 
-module.exports = pendingOrderManager;
+module.exports = { pendingOrderManager, host, pool, url };

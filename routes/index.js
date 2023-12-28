@@ -4,7 +4,7 @@ const tradeRouter = require("./tradeRoutes");
 
 router.get("/test", (req, res) => {
   res.status(200).json({
-    test: "test pass",
+    test: "tere pass",
   });
 });
 
