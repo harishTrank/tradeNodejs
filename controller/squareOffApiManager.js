@@ -4,6 +4,7 @@ const tradeCoinModal = require("../models/tradeCoin.model");
 
 const squareOffApiManager = async (req, res) => {
   const client = await pool.connect();
+  console.log("squareOffApiManager");
   try {
     const { coinType } = req.query;
     const sqlQuery = `SELECT id FROM "App_myuser" where margin_sq=TRUE and status=True`;
