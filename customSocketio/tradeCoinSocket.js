@@ -38,6 +38,10 @@ const socketTestCase = (io) => {
     });
 
     socket.on("getOneData", async (data) => {
+      if (userIntervals.oneData[socket.id]) {
+        clearInterval(userIntervals.oneData[socket.id]);
+      }
+
       const oneDataInterval = setInterval(async () => {
         io.to(socket.id).emit(
           "getOneDataSend",
