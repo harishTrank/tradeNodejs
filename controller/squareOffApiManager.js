@@ -38,7 +38,7 @@ const squareOffApiManager = async (req, res) => {
           coin_name: position?.coin_name,
           ex_change: currentLiveData?.Exchange,
           action: Number(position?.total_quantity) < 0 ? "BUY" : "SELL",
-          quantity: Number(position?.total_quantity),
+          quantity: Math.abs(Number(position?.total_quantity)),
           price:
             Number(position?.total_quantity) > 0
               ? currentLiveData.SellPrice
