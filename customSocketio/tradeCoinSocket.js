@@ -11,7 +11,7 @@ const socketTestCase = (io) => {
     socket.on("tradeCoin", () => {
       const allDataInterval = setInterval(async () => {
         io.to(socket.id).emit("tradeCoin data", await tradeCoinModal.find({}));
-      }, 1000);
+      }, 500);
       userIntervals.allData[socket.id] = allDataInterval;
     });
 
@@ -28,7 +28,7 @@ const socketTestCase = (io) => {
           })
         );
         lengthCase = data.length;
-      }, 1000);
+      }, 500);
       userIntervals.filterData[socket.id] = filterDataInterval;
 
       socket.on("filterDataOff", () => {
@@ -49,7 +49,7 @@ const socketTestCase = (io) => {
             InstrumentIdentifier: data.identifier,
           })
         );
-      }, 1000);
+      }, 500);
       userIntervals.oneData[socket.id] = oneDataInterval;
 
       socket.on("getOneDataOff", () => {
