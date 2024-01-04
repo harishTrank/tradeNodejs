@@ -4,7 +4,6 @@ const allCoinIdentifier = async (req, res) => {
   try {
     const { coinType } = req.query;
     let response;
-    console.log('coinType', coinType)
     if (coinType && coinType !== "") {
       response = await tradeCoinModal
         .find({
