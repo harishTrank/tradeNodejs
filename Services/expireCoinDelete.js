@@ -5,6 +5,7 @@ const dayjs = require("dayjs");
 
 const expireCoinDelete = async (req, res) => {
   const client = await pool.connect();
+  console.log("expireCoinDelete");
   try {
     const currentDate = dayjs().format("DDMMMYYYY").toUpperCase();
     const mongoQuery = {
