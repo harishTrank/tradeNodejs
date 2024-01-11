@@ -7,7 +7,7 @@ const squareOffApiManager = async (req, res) => {
   console.log("squareOffApiManager");
   try {
     const { coinType } = req.query;
-    const sqlQuery = `SELECT id FROM "App_myuser" where margin_sq=TRUE and status=True`;
+    const sqlQuery = `SELECT id, squareoff_mcx, squareoff_nse, squareoff_mini FROM "App_myuser" where squareoff_nse=TRUE or squareoff_mcx=TRUE or squareoff_mini=TRUE and margin_sq=TRUE and status=True`;
     const users = await client.query(sqlQuery);
     users?.rows?.map(async (userId) => {
       const positionQuery = `SELECT 
@@ -31,27 +31,34 @@ const squareOffApiManager = async (req, res) => {
         const currentLiveData = await tradeCoinModal.findOne({
           InstrumentIdentifier: position.identifer,
         });
-        await axios.post(url, {
-          userId: userId?.id,
-          identifer: position?.identifer,
-          trade_type: "Market",
-          coin_name: position?.coin_name,
-          ex_change: currentLiveData?.Exchange,
-          action: Number(position?.total_quantity) < 0 ? "BUY" : "SELL",
-          quantity: Math.abs(Number(position?.total_quantity)),
-          price:
-            Number(position?.total_quantity) > 0
-              ? currentLiveData.SellPrice
-              : currentLiveData.BuyPrice,
-          is_pending: false,
-          ip_address: "square off",
-          order_method: "square off",
-          lot_size: currentLiveData.QuotationLot,
-          sl_flag: false,
-          stop_loss: 0,
-          is_cancel: false,
-          type: "WEB",
-        });
+        if (
+          (currentLiveData?.Exchange === "NSE" && userId.squareoff_nse) ||
+          (currentLiveData?.Exchange === "MCX" && userId.squareoff_mcx) ||
+          (currentLiveData?.Exchange === "MINI" && userId.squareoff_mini) ||
+          userId.margin_sq
+        ) {
+          await axios.post(url, {
+            userId: userId?.id,
+            identifer: position?.identifer,
+            trade_type: "Market",
+            coin_name: position?.coin_name,
+            ex_change: currentLiveData?.Exchange,
+            action: Number(position?.total_quantity) < 0 ? "BUY" : "SELL",
+            quantity: Math.abs(Number(position?.total_quantity)),
+            price:
+              Number(position?.total_quantity) > 0
+                ? currentLiveData.SellPrice
+                : currentLiveData.BuyPrice,
+            is_pending: false,
+            ip_address: "square off",
+            order_method: "square off",
+            lot_size: currentLiveData.QuotationLot,
+            sl_flag: false,
+            stop_loss: 0,
+            is_cancel: false,
+            type: "WEB",
+          });
+        }
       });
     });
     res.status(200).json({
