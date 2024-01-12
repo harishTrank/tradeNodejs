@@ -3,6 +3,7 @@ const tradeCoinModal = require("../../models/tradeCoin.model");
 const weeklyAdminManager = async (req, res) => {
   let { identifiers } = req.query;
   identifiers = JSON.parse(identifiers.replaceAll(`'`, `"`));
+  console.log("identifiers", identifiers);
   try {
     const response = await tradeCoinModal
       .find({
