@@ -2,6 +2,7 @@ const { Pool } = require("pg");
 const axios = require("axios");
 
 const host = "52.66.205.199";
+const endPoints = `${host}:8000`;
 const pool = new Pool({
   host,
   user: "postgres",
@@ -10,7 +11,7 @@ const pool = new Pool({
   port: 5432,
 });
 
-const url = `http://${host}:8000/api/buy-sell-coin/`;
+const url = `http://${endPoints}/api/buy-sell-coin/`;
 
 const pendingOrderManager = async (currentData) => {
   const client = await pool.connect();
@@ -83,4 +84,4 @@ const pendingOrderManager = async (currentData) => {
   }
 };
 
-module.exports = { pendingOrderManager, host, pool, url };
+module.exports = { pendingOrderManager, host, pool, url, endPoints };
