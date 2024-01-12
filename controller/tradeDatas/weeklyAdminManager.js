@@ -9,7 +9,7 @@ const weeklyAdminManager = async (req, res) => {
           $in: identifiers,
         },
       })
-      .select("BuyPrice SellPrice InstrumentIdentifier");
+      .select("BuyPrice SellPrice InstrumentIdentifier -_id");
     return res.status(200).json({
       status: true,
       message: "Data getting successfully.",
