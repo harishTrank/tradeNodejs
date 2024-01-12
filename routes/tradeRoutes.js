@@ -11,5 +11,5 @@ router.get("/length", tradeCoinLength);
 router.post("/coins", multiCoinSearch);
 router.get("/squareoff", squareOffApiManager);
 router.get("/expire", expireCoinDelete);
-router.get("/weekly", weeklyAdminManager);
+router.post("/weekly", weeklyAdminManager);
 module.exports = router;
