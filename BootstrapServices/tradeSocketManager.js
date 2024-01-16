@@ -1,6 +1,6 @@
 const { tradeApiKey, webSocketURL } = require("../config/keys");
 const tradeCoinModal = require("../models/tradeCoin.model");
-const {pendingOrderManager} = require("../Services/pendingOrderManager");
+const { pendingOrderManager } = require("../Services/pendingOrderManager");
 const WebSocket = require("ws");
 const nseList = require("../Extra/NSEList");
 const { miniList } = require("../Extra/MiniList");
@@ -80,40 +80,42 @@ const tradeSocketManager = () => {
         const currentObject = await tradeCoinModal.findOne({
           InstrumentIdentifier: receivedData?.InstrumentIdentifier,
         });
-        await tradeCoinModal.findOneAndUpdate(
-          {
-            InstrumentIdentifier: receivedData?.InstrumentIdentifier,
-          },
-          {
-            ...receivedData,
-            ...{
-              Exchange:
-                receivedData.Exchange === "MCX" &&
-                miniList?.find((item) =>
-                  receivedData?.InstrumentIdentifier.match(item)
-                )
-                  ? "MINI"
-                  : receivedData?.Exchange.toUpperCase(),
+        if (receivedData?.BuyPrice > 0 && receivedData?.SellPrice) {
+          await tradeCoinModal.findOneAndUpdate(
+            {
+              InstrumentIdentifier: receivedData?.InstrumentIdentifier,
             },
-            ...{
-              buyColor:
-                currentObject?.BuyPrice < receivedData?.BuyPrice
-                  ? "rgba(0, 255, 0, 0.4)"
-                  : "rgba(256, 0,0, 0.4)",
+            {
+              ...receivedData,
+              ...{
+                Exchange:
+                  receivedData.Exchange === "MCX" &&
+                  miniList?.find((item) =>
+                    receivedData?.InstrumentIdentifier.match(item)
+                  )
+                    ? "MINI"
+                    : receivedData?.Exchange.toUpperCase(),
+              },
+              ...{
+                buyColor:
+                  currentObject?.BuyPrice < receivedData?.BuyPrice
+                    ? "rgba(0, 255, 0, 0.4)"
+                    : "rgba(256, 0,0, 0.4)",
+              },
+              ...{
+                sellColor:
+                  currentObject?.SellPrice < receivedData?.SellPrice
+                    ? "rgba(0, 255, 0, 0.4)"
+                    : "rgba(256, 0,0, 0.4)",
+              },
             },
-            ...{
-              sellColor:
-                currentObject?.SellPrice < receivedData?.SellPrice
-                  ? "rgba(0, 255, 0, 0.4)"
-                  : "rgba(256, 0,0, 0.4)",
-            },
-          },
-          {
-            new: true,
-            upsert: true,
-          }
-        );
-        pendingOrderManager(receivedData);
+            {
+              new: true,
+              upsert: true,
+            }
+          );
+          pendingOrderManager(receivedData);
+        }
       }
     });
   } catch (error) {
