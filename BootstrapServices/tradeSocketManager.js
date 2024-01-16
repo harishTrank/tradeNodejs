@@ -80,7 +80,7 @@ const tradeSocketManager = () => {
         const currentObject = await tradeCoinModal.findOne({
           InstrumentIdentifier: receivedData?.InstrumentIdentifier,
         });
-        if (receivedData?.BuyPrice > 0 && receivedData?.SellPrice) {
+        if (receivedData?.BuyPrice > 0 && receivedData?.SellPrice > 0) {
           await tradeCoinModal.findOneAndUpdate(
             {
               InstrumentIdentifier: receivedData?.InstrumentIdentifier,
