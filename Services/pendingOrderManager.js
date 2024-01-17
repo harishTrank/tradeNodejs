@@ -52,7 +52,7 @@ const pendingOrderManager = async (currentData) => {
             mapItem.stop_loss <= currentData.SellPrice)
         ) {
           await axios.post(url, {
-            id: mapItem.buy_sell_user_id,
+            userId: mapItem.buy_sell_user_id,
             identifer: currentData?.InstrumentIdentifier,
             trade_type: "SL",
             coin_name: mapItem.coin_name,
