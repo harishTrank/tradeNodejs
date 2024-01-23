@@ -87,27 +87,25 @@ const tradeSocketManager = () => {
             },
             {
               ...receivedData,
-              ...{
-                Exchange:
-                  receivedData.Exchange === "MCX" &&
-                  miniList?.find((item) =>
-                    receivedData?.InstrumentIdentifier.match(item)
-                  )
-                    ? "MINI"
-                    : receivedData?.Exchange.toUpperCase(),
-              },
-              ...{
-                buyColor:
-                  currentObject?.BuyPrice < receivedData?.BuyPrice
-                    ? "rgba(0, 255, 0, 0.4)"
-                    : "rgba(256, 0,0, 0.4)",
-              },
-              ...{
-                sellColor:
-                  currentObject?.SellPrice < receivedData?.SellPrice
-                    ? "rgba(0, 255, 0, 0.4)"
-                    : "rgba(256, 0,0, 0.4)",
-              },
+              Exchange:
+                receivedData.Exchange === "MCX" &&
+                miniList?.find((item) =>
+                  receivedData?.InstrumentIdentifier.match(item)
+                )
+                  ? "MINI"
+                  : receivedData?.Exchange.toUpperCase(),
+              QuotationLot:
+                receivedData?.QuotationLot !== 0
+                  ? receivedData?.QuotationLot
+                  : 1,
+              buyColor:
+                currentObject?.BuyPrice < receivedData?.BuyPrice
+                  ? "rgba(0, 255, 0, 0.4)"
+                  : "rgba(256, 0,0, 0.4)",
+              sellColor:
+                currentObject?.SellPrice < receivedData?.SellPrice
+                  ? "rgba(0, 255, 0, 0.4)"
+                  : "rgba(256, 0,0, 0.4)",
             },
             {
               new: true,
