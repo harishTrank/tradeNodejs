@@ -1,12 +1,12 @@
 const { Pool } = require("pg");
 const axios = require("axios");
 
-const host = "52.66.205.199";
+const host = "15.206.82.36";
 const endPoints = `${host}:8000`;
 const pool = new Pool({
   host,
   user: "postgres",
-  password: ",sclBQhGIHk3",
+  password: "Test@123",
   database: "postgres",
   port: 5432,
 });
