@@ -112,7 +112,7 @@ const tradeSocketManager = () => {
               upsert: true,
             }
           );
-          pendingOrderManager(receivedData);
+          // pendingOrderManager(receivedData);
         }
       }
     });
