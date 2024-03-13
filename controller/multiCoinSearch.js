@@ -1,10 +1,21 @@
 const tradeCoinModal = require("../models/tradeCoin.model");
 
 const multiCoinSearch = async (req, res) => {
+  let response;
   try {
-    const response = await tradeCoinModal.find({
+    response = await tradeCoinModal.find({
       Exchange: { $in: req.body.coinList },
     });
+
+    if (req.query?.search && req.query.search.length > 0) {
+      response = await tradeCoinModal
+        .find({
+          InstrumentIdentifier: { $regex: new RegExp(req.query.search, "i") },
+          Exchange: { $in: req.body.coinList },
+        })
+        .sort({ InstrumentIdentifier: 1 });
+    }
+
     return res.status(200).json({
       success: true,
       message: "Data retrieved successfully.",
