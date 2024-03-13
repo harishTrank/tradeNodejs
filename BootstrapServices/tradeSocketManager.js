@@ -112,23 +112,26 @@ const tradeSocketManager = () => {
               upsert: true,
             }
           );
-          // pendingOrderManager(receivedData);
+          pendingOrderManager(receivedData);
         }
       }
     });
   } catch (error) {
     console.log("error In Socket case", error);
-    setTimeout(() => tradeSocketManager(), 1000);
+    // setTimeout(() => tradeSocketManager(), 1000);
+    tradeSocketManager();
   }
 
   ws.on("close", () => {
     console.log("Connection closed");
-    setTimeout(() => tradeSocketManager(), 1000);
+    tradeSocketManager();
+    // setTimeout(() => tradeSocketManager(), 1000);
   });
 
   ws.on("error", (error) => {
     console.error(`WebSocket error: ${error.message}`);
-    setTimeout(() => tradeSocketManager(), 1000);
+    tradeSocketManager();
+    // setTimeout(() => tradeSocketManager(), 1000);
   });
 };
 

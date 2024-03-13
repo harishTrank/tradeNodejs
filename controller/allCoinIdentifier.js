@@ -4,7 +4,13 @@ const allCoinIdentifier = async (req, res) => {
   try {
     const { coinType } = req.query;
     let response;
-    if (coinType && coinType !== "") {
+    if (req.query?.search && req.query.search.length > 0) {
+      response = await tradeCoinModal
+        .find({
+          InstrumentIdentifier: { $regex: new RegExp(req.query.search, "i") },
+        })
+        .sort({ InstrumentIdentifier: 1 });
+    } else if (coinType && coinType !== "") {
       response = await tradeCoinModal
         .find({
           Exchange: coinType,

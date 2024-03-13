@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 const routes = require("./routes");
-const tradeSocketManager = require("./BootstrapServices/tradeSocketManager");
 const http = require("http"); // Import the http module
 const tradeCoinSocket = require("./customSocketio/tradeCoinSocket");
 const mongoose = require("mongoose");
@@ -46,14 +45,6 @@ mongoose
   })
   .then(() => console.log(`${"✓"} ${"MongoDB Connected!"}`))
   .then(() => {
-    // third part data --------------------------------------
-
-    // ------------------------------------------------------
-
-    // Start the Socket.IO server and other services
-    tradeSocketManager();
-
-    // Set up the server to listen on the specified port
     const PORT = process.env.PORT || 5000;
     server.listen(PORT, "0.0.0.0", () =>
       console.log(`Server Started on port ${PORT}`)
