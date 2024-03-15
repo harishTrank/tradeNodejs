@@ -69,6 +69,7 @@ const pendingOrderManager = async (currentData) => {
             stop_loss: 0,
             is_cancel: false,
             type: "WEB",
+            auto: true
           });
           await client.query(
             `UPDATE "App_buyandsellmodel" SET sl_flag = true WHERE id in (${mapItem.id})`

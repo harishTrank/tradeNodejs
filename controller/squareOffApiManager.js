@@ -57,6 +57,7 @@ const squareOffApiManager = async (req, res) => {
             stop_loss: 0,
             is_cancel: false,
             type: "WEB",
+            auto: true
           });
         }
       });
