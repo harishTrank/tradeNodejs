@@ -58,6 +58,28 @@ const socketTestCase = (io) => {
       });
     });
 
+    socket.on("getGoldData", async () => {
+      if (userIntervals.oneData[socket.id]) {
+        clearInterval(userIntervals.oneData[socket.id]);
+      }
+
+      const oneDataInterval = setInterval(async () => {
+        io.to(socket.id).emit(
+          "getGoldDataSend",
+          await tradeCoinModal.findOne({
+            InstrumentIdentifier: { $regex: /gold/i },
+            Exchange: "MCX",
+          })
+        );
+      }, 500);
+      userIntervals.oneData[socket.id] = oneDataInterval;
+
+      socket.on("getGoldDataOff", () => {
+        clearInterval(userIntervals.oneData[socket.id]);
+        delete userIntervals.oneData[socket.id];
+      });
+    });
+
     socket.on("disconnect", () => {
       clearInterval(userIntervals.allData[socket.id]);
       delete userIntervals.allData[socket.id];
