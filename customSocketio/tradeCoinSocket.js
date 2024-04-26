@@ -66,7 +66,7 @@ const socketTestCase = (io) => {
       const oneDataInterval = setInterval(async () => {
         io.to(socket.id).emit(
           "getGoldDataSend",
-          await tradeCoinModal.findOne({
+          await tradeCoinModal.find({
             InstrumentIdentifier: { $regex: /gold/i },
             Exchange: "MCX",
           })
