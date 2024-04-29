@@ -58,7 +58,7 @@ const socketTestCase = (io) => {
       });
     });
 
-    socket.on("getGoldData", async () => {
+    socket.on("getGoldData", async (data) => {
       if (userIntervals.oneData[socket.id]) {
         clearInterval(userIntervals.oneData[socket.id]);
       }
@@ -67,7 +67,7 @@ const socketTestCase = (io) => {
         io.to(socket.id).emit(
           "getGoldDataSend",
           await tradeCoinModal.find({
-            InstrumentIdentifier: { $regex: /gold/i },
+            InstrumentIdentifier: { $regex: `/${data.value}/i` },
             Exchange: "MCX",
           })
         );
