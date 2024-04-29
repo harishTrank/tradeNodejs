@@ -67,7 +67,7 @@ const socketTestCase = (io) => {
         io.to(socket.id).emit(
           "getGoldDataSend",
           await tradeCoinModal.find({
-            InstrumentIdentifier: { $regex: `/${data.value}/i` },
+            InstrumentIdentifier: { $regex: new RegExp(`${data.value}`, "i") },
             Exchange: "MCX",
           })
         );
