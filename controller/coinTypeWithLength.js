@@ -3,14 +3,28 @@ const tradeCoinModal = require("../models/tradeCoin.model");
 const coinTypeWithLength = async (req, res) => {
   try {
     const { coinList } = req.query;
+    let miniCount;
+    let ecxCount;
 
-    const miniCount = await tradeCoinModal.countDocuments({
-      Exchange: "MINI",
-    });
+    if (req.query?.month) {
+      miniCount = await tradeCoinModal.countDocuments({
+        Exchange: "MINI",
+        InstrumentIdentifier: { $regex: req.query.month, $options: "i" },
+      });
 
-    const ecxCount = await tradeCoinModal.countDocuments({
-      Exchange: "MCX",
-    });
+      ecxCount = await tradeCoinModal.countDocuments({
+        Exchange: "MCX",
+        InstrumentIdentifier: { $regex: req.query.month, $options: "i" },
+      });
+    } else {
+      miniCount = await tradeCoinModal.countDocuments({
+        Exchange: "MINI",
+      });
+
+      ecxCount = await tradeCoinModal.countDocuments({
+        Exchange: "MCX",
+      });
+    }
 
     const nseCound = await tradeCoinModal.countDocuments({
       Exchange: "NSE",
